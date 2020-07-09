@@ -16,8 +16,10 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'flazz/vim-colorschemes'
 	Plug 'AndrewRadev/splitjoin.vim'
 	Plug 'ruanyl/vim-gh-line'
-	" Plug 'w0rp/ale'
-	Plug 'airblade/vim-gitgutter'
+	"Plug 'fatih/vim-go'
+	"Plug 'w0rp/ale'
+    Plug 'dense-analysis/ale'
+    Plug 'airblade/vim-gitgutter'
 	Plug 'tpope/vim-commentary'
 	Plug 'NLKNguyen/papercolor-theme'
 	" Plug 'ctrlpvim/ctrlp.vim'
@@ -25,7 +27,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'junegunn/fzf.vim'
 	Plug 'mileszs/ack.vim'
 	" Plug 'Shougo/denite.nvim'
-	Plug 'devjoe/vim-codequery'
+	"Plug 'devjoe/vim-codequery'
 	Plug 'tpope/vim-dispatch'
 	Plug 'terryma/vim-multiple-cursors'
 	Plug 'scrooloose/nerdtree'
@@ -38,16 +40,16 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'bronson/vim-trailing-whitespace'
 	Plug 'brooth/far.vim'
 	" Plug 'ronakg/quickr-cscope.vim'
-	Plug 'blueyed/vim-qf_resize'
-	Plug 'HerringtonDarkholme/yats.vim'
+	"Plug 'blueyed/vim-qf_resize'
+	"Plug 'HerringtonDarkholme/yats.vim'
 	Plug 'tpope/vim-fugitive'
 	" Plug 'derekwyatt/vim-scala'
-	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	Plug 'Shougo/unite.vim'
+	Plug 'neoclide/coc.nvim', {'branch': 'master'}
+	"Plug 'Shougo/unite.vim'
 	Plug 'frazrepo/vim-rainbow'
 	" Plug 'mbbill/undotree'
 	" Plug 'tpope/vim-eunuch'
-  	" Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
+  	 Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
 	" Plug 'artur-shaik/vim-javacomplete2'
 "	Plug 'nsf/gocode', {'rtp': 'nvim/'}
 "	Plug 'vim-syntastic/syntastic'
@@ -67,8 +69,9 @@ call plug#begin('~/.config/nvim/plugged')
 	" Plug 'zchee/deoplete-go', { 'do': 'make'}
     " Plug 'xolox/vim-colorscheme-switcher'
 	" Plug 'xolox/vim-misc'
-	Plug 'morhetz/gruvbox'
+	" Plug 'morhetz/gruvbox'
 	Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+    " Plug 'neovim/nvim-lsp'
 call plug#end()
 
 " Configuration for vim-scala
@@ -91,7 +94,8 @@ silent! cs add $CSCOPE_DB
 let g:quickr_cscope_use_qf_g = 1
 
 set background=dark
-colorscheme Benokai
+" colorscheme Benokai
+colorscheme PaperColor
 
 
 set noswapfile
@@ -110,6 +114,8 @@ set clipboard=unnamedplus
 set ruler
 set shell=/bin/bash
 set tabstop=4
+set expandtab ts=4 sw=4 ai
+set inccommand=split
 
 noremap <leader>1 1gt
 noremap <leader>2 2gt
@@ -121,6 +127,7 @@ noremap <leader>7 7gt
 noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
+
 
 "au FileType qf wincmd J
 let g:codequery_trigger_build_db_when_db_not_found = 1
@@ -174,34 +181,44 @@ let g:go_highlight_function_parameters = 1
 let g:go_highlight_variable_declarations = 1
 let g:go_highlight_variable_assignments = 1
 let g:go_decls_includes = "func,type"
-let g:go_auto_sameids = 1
+let g:go_auto_sameids = 0
 let g:go_auto_type_info = 0
-let g:go_fmt_command = "goimports"
-let g:go_def_mode = 'godef'
+let g:go_fmt_command = "gofmt"
+let g:go_imports_mode = "goimports"
+let g:go_def_mode = ''
+let g:go_referrers_mode = ''
+let g:go_implements_mode = ''
+let g:go_fmt_autosave = 0
+let g:go_metalinter_autosave = 0
+let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', 'godox', 'gocritic', 'scopelint', 'prealloc', 'unparam', 'deadcode', 'gosimple', 'ineffassign', 'staticcheck', 'structcheck', 'unused', 'depguard']
+" let g:go_def_mode = 'godef'
 " let g:go_snippet_engine = "neosnippet"
 let g:go_def_mapping_enabled = 0
-
+let g:go_code_completion_enabled = 0
+let g:go_gopls_enabled = 0
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 
 let g:ale_sign_error = '⤫'
 let g:ale_sign_warning = '⚠'
 nmap <silent> <C-k> <Plug>(ale_previous_wrap)
 nmap <silent> <C-j> <Plug>(ale_next_wrap)
-let g:ale_lint_on_text_changed = 'never'
+let g:ale_linters = {
+            \ 'go': ['gopls'],
+            \ }
 " You can disable this option too
 " if you don't want linters to run on opening a file
-let g:ale_lint_on_enter = 1
-let g:ale_lint_on_save = 1
-"let g:ale_linters = {'go': ['govet', 'golint']}
+" let g:ale_lint_on_enter = 1
+" let g:ale_lint_on_save = 1
+" let g:ale_linters = {'go': ['govet', 'golint']}
 let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 0
+" let g:ale_set_quickfix = 0
 let g:ale_open_list = 0
 " Set this if you want to.
 " This can be useful if you are combining ALE with
 " some other plugin which sets quickfix errors, etc.
 let g:ale_keep_list_window_open = 0
 " Enable integration with airline.
-let g:airline#extensions#ale#enabled = 1
+" let g:airline#extensions#ale#enabled = 1
 
 
 "
@@ -274,6 +291,7 @@ inoremap <C-a> <Esc>:tabnew<CR>
 set splitbelow
 nnoremap <C-e> :split<BAR>resize 15<BAR>term fish<CR>
 inoremap <C-e> <Esc>:split<BAR>resize 15<BAR>term fish<CR>
+tnoremap <Esc> <C-\><C-n>
 
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
@@ -294,6 +312,8 @@ nmap <F2> :NERDTreeToggle<CR>
 
 " au VimEnter *  NERDTree
 " autocmd BufWinEnter * NERDTreeMirror
+" autocmd VimEnter * wincmd w
+
 let g:nerdtree_sync_cursorline = 1
 
 let g:NERDTreeIndicatorMapCustom = {
@@ -375,7 +395,7 @@ map <Leader>h <Plug>(easymotion-linebackward)
 "nmap <Leader>l <Plug>(easymotion-overwin-line)
 "
 " Move to word
-nmap <Leader><Leader>w <Plug>(easymotion-overwin-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 " nmap z/ <Plug>(incsearch-fuzzy-/)
 " nmap z? <Plug>(incsearch-fuzzy-?)
@@ -397,10 +417,10 @@ set cmdheight=2
 autocmd FileType qf wincmd J
 
 nnoremap <leader>q :cclose<CR>
-let g:go_list_type = "quickfix"
+" let g:go_list_type = "quickfix"
 autocmd FileType go nmap <leader>t  <Plug>(go-test-func)
-let g:go_guru_scope = ["..."]
-autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'tabe')
+" let g:go_guru_scope = ["..."]
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'vsplit')
 " set completeopt-=preview
 
 highlight GitGutterAdd    guifg=#009900 guibg=<X> ctermfg=2
@@ -432,7 +452,7 @@ set hidden
 " Better display for messages
 set cmdheight=2
 " Smaller updatetime for CursorHold & CursorHoldI
-set updatetime=300
+set updatetime=10
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 " always show signcolumns
@@ -476,7 +496,7 @@ function! s:show_documentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
@@ -500,6 +520,9 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+nnoremap <silent> <space>i :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+let g:coc_enable_locationlist = 1
 
 " au BufRead,BufNewFile *.sbt set filetype=scala
 
@@ -547,6 +570,6 @@ nnoremap <Leader>ev :vsplit $MYVIMRC<CR>
 nnoremap <Leader>sv :source $MYVIMRC<CR>
 
 iabbrev gsgn Signed-off-by: senthil <cendhu@gmail.com>
-iabbrev gibmsgn Signed-off-by: Senthil Nathan N <snatara7@in.ibm.com>
 
 nnoremap yl v$hy
+hi CursorLine cterm=underline,bold term=underline
