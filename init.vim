@@ -59,8 +59,8 @@ call plug#begin('~/.config/nvim/plugged')
 	" Plug 'haya14busa/incsearch-fuzzy.vim'
 	" Plug 'haya14busa/incsearch.vim'
 	" Plug 'ensime/ensime-vim'
-	Plug 'Shougo/neosnippet.vim'
-    Plug 'Shougo/neosnippet-snippets'
+	" Plug 'Shougo/neosnippet.vim'
+    " Plug 'Shougo/neosnippet-snippets'
 	Plug 'SirVer/ultisnips'
 	" Plug 'Xuyuanp/nerdtree-git-plugin'
 	Plug 'mkitt/tabline.vim'
@@ -72,6 +72,7 @@ call plug#begin('~/.config/nvim/plugged')
 	" Plug 'morhetz/gruvbox'
 	Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
     " Plug 'neovim/nvim-lsp'
+    Plug 'matsen/nvim-colors-solarized'
 call plug#end()
 
 " Configuration for vim-scala
@@ -96,8 +97,11 @@ let g:quickr_cscope_use_qf_g = 1
 set background=dark
 " colorscheme Benokai
 colorscheme PaperColor
-
-
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+set background=dark " or light
+" colorscheme solarized
+" colorscheme solarized
+" set termguicolors
 set noswapfile
 set nobackup
 set nowritebackup
@@ -106,7 +110,8 @@ set relativenumber
 set incsearch
 set hlsearch
 set cursorline
-set mouse=a
+set mouse=
+set autochdir
 set ignorecase
 set autoindent
 set smartindent
@@ -147,12 +152,17 @@ let g:codequery_db_path = "/Users/senthil/go/src/github.com/hyperledger/fabric"
 " let g:ctrlp_map = ''
 " nnoremap <c-l> :CtrlP /Users/senthil/go/src/github.com/hyperledger/fabric<cr>
 " onoremap <c-l> <ESC>:CtrlP /Users/senthil/go/src/github.com/hyperledger/fabric<cr>
-
+let g:fzf_preview_window = ''
 nnoremap <c-p> :FZF<cr>
-onoremap <c-p> <ESC>:FZF<cr>
+inoremap <c-p> <ESC>:FZF<cr>
+nnoremap f<c-p> :FZF $FABRIC<cr>
+inoremap f<c-p> :FZF $FABRIC<cr>
+nnoremap b<c-p> :FZF $BDB<cr>
+inoremap b<c-p> :FZF $BDB<cr>
+
 
 nnoremap <c-l> :GFiles<cr>
-onoremap <c-l> <ESC>:GFiles<cr>
+inoremap <c-l> <ESC>:GFiles<cr>
 
 nnoremap <c-h> :History<cr>
 inoremap <c-h> <ESC>:History<cr>
@@ -192,19 +202,21 @@ let g:go_fmt_autosave = 0
 let g:go_metalinter_autosave = 0
 let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', 'godox', 'gocritic', 'scopelint', 'prealloc', 'unparam', 'deadcode', 'gosimple', 'ineffassign', 'staticcheck', 'structcheck', 'unused', 'depguard']
 " let g:go_def_mode = 'godef'
-" let g:go_snippet_engine = "neosnippet"
+" let g:go_snippet_engine = "ultisnips"
 let g:go_def_mapping_enabled = 0
 let g:go_code_completion_enabled = 0
 let g:go_gopls_enabled = 0
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 
-let g:ale_sign_error = '⤫'
 let g:ale_sign_warning = '⚠'
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+nmap <silent> [n <Plug>(ale_previous_wrap)
+nmap <silent> ]n <Plug>(ale_next_wrap)
 let g:ale_linters = {
-            \ 'go': ['gopls'],
-            \ }
+\   'go': ['revive', 'gopls'],
+\}
+" let g:ale_linters = {
+"             \ 'go': ['gopls'],
+"             \ }
 " You can disable this option too
 " if you don't want linters to run on opening a file
 " let g:ale_lint_on_enter = 1
@@ -289,9 +301,16 @@ nnoremap <C-a> :tabnew<CR>
 inoremap <C-a> <Esc>:tabnew<CR>
 
 set splitbelow
-nnoremap <C-e> :split<BAR>resize 15<BAR>term fish<CR>
-inoremap <C-e> <Esc>:split<BAR>resize 15<BAR>term fish<CR>
+let g:path_change_cmd = ""
+" nnoremap <C-e> :let g:path_change_cmd = 'cd ' . getcwd()<CR>:cd %:p:h<CR>:split<BAR>resize 15<BAR>term fish<CR>:execute path_change_cmd<CR>
+" inoremap <C-e> :let g:path_change_cmd = 'cd ' . getcwd()<CR>:cd %:p:h<CR>:split<BAR>resize 15<BAR>term fish<CR>:execute path_change_cmd<CR>
+nnoremap <silent> <C-e> :split<BAR>resize 15<BAR>term fish<CR>
+nnoremap <silent> <C-e> :split<BAR>resize 15<BAR>term fish<CR>
 tnoremap <Esc> <C-\><C-n>
+" autocmd BufWinEnter,WinEnter term://* startinsert
+" autocmd TermOpen term://* startinsert
+" autocmd TermEnter term://* startinsert
+" autocmd BufEnter term://* startinsert
 
 let g:gitgutter_realtime = 0
 let g:gitgutter_eager = 0
@@ -383,19 +402,26 @@ syntax on
 " tnoremap <ESC> <C-\><C-n>
 
 " <Leader>f{char} to move to {char}
-map <Leader>s <Plug>(easymotion-overwin-f)
 
-map <Leader>l <Plug>(easymotion-lineforward)
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-map <Leader>h <Plug>(easymotion-linebackward)
+" map <Leader> <Plug>(easymotion-prefix)
+" map <Leader>f <Plug>(easymotion-bd-f)
+" map <Leader>s <Plug>(easymotion-overwin-f)
+
+" map <Leader> <Plug>(easymotion-prefix)
+" map <Leader>l <Plug>(easymotion-lineforward)
+" map <Leader>j <Plug>(easymotion-j)
+" map <Leader>k <Plug>(easymotion-k)
+" map <Leader>h <Plug>(easymotion-linebackward)
+" nmap s <Plug>(easymotion-overwin-f2)
+nmap s <Plug>(easymotion-overwin-f)
+let g:EasyMotion_startofline = 0
 
 " Move to line
 "map <Leader>l <Plug>(easymotion-bd-jk)
 "nmap <Leader>l <Plug>(easymotion-overwin-line)
 "
 " Move to word
-nmap <Leader>w <Plug>(easymotion-overwin-w)
+" nmap <Leader>w <Plug>(easymotion-overwin-w)
 
 " nmap z/ <Plug>(incsearch-fuzzy-/)
 " nmap z? <Plug>(incsearch-fuzzy-?)
@@ -441,7 +467,7 @@ nnoremap <silent> <space>y  :CocList yank<cr>
 " let g:echodoc#type = 'floating'
 " " To use a custom highlight for the float window,
 " " change Pmenu to your highlight group
-" highlight link EchoDocFloat Pmenu 
+" highlight link EchoDocFloat Pmenu
 
 " -------------------------------------------------------------------------------------------------
 " coc.nvim default settings
@@ -460,26 +486,27 @@ set signcolumn=yes
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use `[c` and `]c` to navigate diagnostics
-nmap <silent> [n <Plug>(coc-diagnostic-prev)
-nmap <silent> ]n <Plug>(coc-diagnostic-next)
+" nmap <silent> [n <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]n <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gd :call CocAction('jumpDefinition')<CR>
+"<Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
@@ -496,6 +523,29 @@ function! s:show_documentation()
 endfunction
 
 " use <tab> for trigger completion and navigate to the next complete item
+let g:UltiSnipsExpandTrigger = '<C-y>'
+let g:UltiSnipsJumpForwardTrigger = '<C-j>'
+let g:UltiSnipsJumpBackwardTrigger = '<C-k>'
+let g:UltiSnipsRemoveSelectModeMappings = 0
+" let g:UltiSnipsSnippetDirectories=["/Users/senthil/.config/nvim/plugged/vim-go/gosnippets/UltiSnips"]
+
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
+
+" let g:coc_snippet_next = '<tab>'
+
+inoremap <silent><expr> <cr>
+        \ pumvisible() ? coc#_select_confirm() :
+        \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
@@ -506,6 +556,24 @@ inoremap <silent><expr> <Tab>
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
 
+inoremap <silent><expr> <S-Tab>
+      \ pumvisible() ? "\<C-p>" :
+      \ <SID>check_back_space() ? "\<S-Tab>" :
+      \ coc#refresh()
+
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
+
+" let g:coc_snippet_next = '<tab>'
+
 " Highlight the symbol and its references when holding the cursor.
 " autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -513,8 +581,8 @@ inoremap <silent><expr> <Tab>
 nmap <leader>rn <Plug>(coc-rename)
 
 " Remap for format selected region
-vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+vmap <leader>fs  <Plug>(coc-format-selected)
+nmap <leader>fs  <Plug>(coc-format-selected)
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions
@@ -579,8 +647,20 @@ inoremap jk <esc>
 
 nnoremap <Leader>ev :vsplit $MYVIMRC<CR>
 nnoremap <Leader>sv :source $MYVIMRC<CR>
+nnoremap <Leader>es :vsplit /Users/senthil/.config/nvim/plugged/vim-go/gosnippets/UltiSnips/go.snippets<CR>
 
 iabbrev gsgn Signed-off-by: senthil <cendhu@gmail.com>
 
 nnoremap yl v$hy
 hi CursorLine cterm=underline,bold term=underline
+hi LineNr ctermfg=grey
+nnoremap <silent> <leader>c :noh<CR>
+map <leader>tc :tabclose<cr>
+inoremap <C-e> <Esc>A
+
+" vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+" vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+" vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+" vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+" vnoremap $q <esc>`>a'<esc>`<i'<esc>
+" vnoremap $e <esc>`>a`<esc>`<i`<esc>

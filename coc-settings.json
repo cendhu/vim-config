@@ -16,5 +16,6 @@
   "coc.preferences.formatOnSaveFiletypes": ["go"],
   "diagnostic.enable": false,
   "coc.preferences.enableFloatHighlight": true,
-  "coc.preferences.hoverTarget": true
+  "coc.preferences.hoverTarget": true,
+  "suggest.noselect": false
 }
