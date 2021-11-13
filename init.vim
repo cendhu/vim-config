@@ -12,13 +12,13 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'majutsushi/tagbar'
 	Plug 'vim-airline/vim-airline'
 	Plug 'vim-airline/vim-airline-themes'
-	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+	" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 	Plug 'flazz/vim-colorschemes'
 	Plug 'AndrewRadev/splitjoin.vim'
 	Plug 'ruanyl/vim-gh-line'
-	"Plug 'fatih/vim-go'
+	Plug 'fatih/vim-go'
 	"Plug 'w0rp/ale'
-    Plug 'dense-analysis/ale'
+    " Plug 'dense-analysis/ale'
     Plug 'airblade/vim-gitgutter'
 	Plug 'tpope/vim-commentary'
 	Plug 'NLKNguyen/papercolor-theme'
@@ -44,7 +44,7 @@ call plug#begin('~/.config/nvim/plugged')
 	"Plug 'HerringtonDarkholme/yats.vim'
 	Plug 'tpope/vim-fugitive'
 	" Plug 'derekwyatt/vim-scala'
-	Plug 'neoclide/coc.nvim', {'branch': 'master'}
+	" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	"Plug 'Shougo/unite.vim'
 	Plug 'frazrepo/vim-rainbow'
 	" Plug 'mbbill/undotree'
@@ -62,8 +62,8 @@ call plug#begin('~/.config/nvim/plugged')
 	" Plug 'Shougo/neosnippet.vim'
     " Plug 'Shougo/neosnippet-snippets'
 	Plug 'SirVer/ultisnips'
-	" Plug 'Xuyuanp/nerdtree-git-plugin'
-	Plug 'mkitt/tabline.vim'
+	Plug 'Xuyuanp/nerdtree-git-plugin'
+	" Plug 'mkitt/tabline.vim'
 	" Plug 'Shougo/echodoc.vim'
 	" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 	" Plug 'zchee/deoplete-go', { 'do': 'make'}
@@ -73,6 +73,17 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
     " Plug 'neovim/nvim-lsp'
     Plug 'matsen/nvim-colors-solarized'
+    Plug 'neovim/nvim-lspconfig'
+    " Plug 'nvim-lua/completion-nvim'
+    Plug 'ray-x/lsp_signature.nvim'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-cmdline'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-vsnip'
+    Plug 'hrsh7th/vim-vsnip'
+    " Plug 'codota/tabnine-vim'
 call plug#end()
 
 " Configuration for vim-scala
@@ -85,6 +96,11 @@ call plug#end()
 " autocmd BufEnter *.c highlight TagbarSignature guifg=Red ctermfg=Red
 " autocmd BufEnter *.h highlight TagbarSignature guifg=Red ctermfg=Red
 
+lua require("lsp_config")
+
+autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
+autocmd BufWritePre *.go lua goimports(1000)
+
 let g:rainbow_active = 1
 let g:rainbow_guifgs = ['RoyalBlue3', 'DarkOrange3', 'DarkOrchid3', 'FireBrick']
 let g:rainbow_ctermfgs = ['lightblue', 'lightgreen', 'yellow', 'red', 'magenta']
@@ -94,9 +110,15 @@ let mapleader = ','
 silent! cs add $CSCOPE_DB
 let g:quickr_cscope_use_qf_g = 1
 
+
+" let g:solarized_termcolors=256
+syntax enable
+" set background=dark
+" colorscheme solarized
 set background=dark
-" colorscheme Benokai
 colorscheme PaperColor
+" " colorscheme Benokai
+" colorscheme gruvbox
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set background=dark " or light
 " colorscheme solarized
@@ -157,8 +179,8 @@ nnoremap <c-p> :FZF<cr>
 inoremap <c-p> <ESC>:FZF<cr>
 nnoremap f<c-p> :FZF $FABRIC<cr>
 inoremap f<c-p> :FZF $FABRIC<cr>
-nnoremap b<c-p> :FZF $BDB<cr>
-inoremap b<c-p> :FZF $BDB<cr>
+nnoremap b<c-p> :FZF $ORION<cr>
+inoremap b<c-p> :FZF $ORION<cr>
 
 
 nnoremap <c-l> :GFiles<cr>
@@ -206,14 +228,14 @@ let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', 'godox', 'gocritic',
 let g:go_def_mapping_enabled = 0
 let g:go_code_completion_enabled = 0
 let g:go_gopls_enabled = 0
-autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+" autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 
-let g:ale_sign_warning = '⚠'
-nmap <silent> [n <Plug>(ale_previous_wrap)
-nmap <silent> ]n <Plug>(ale_next_wrap)
-let g:ale_linters = {
-\   'go': ['revive', 'gopls'],
-\}
+" let g:ale_sign_warning = '⚠'
+" nmap <silent> [n <Plug>(ale_previous_wrap)
+" nmap <silent> ]n <Plug>(ale_next_wrap)
+" let g:ale_linters = {
+" \   'go': ['revive', 'gopls'],
+" \}
 " let g:ale_linters = {
 "             \ 'go': ['gopls'],
 "             \ }
@@ -222,13 +244,13 @@ let g:ale_linters = {
 " let g:ale_lint_on_enter = 1
 " let g:ale_lint_on_save = 1
 " let g:ale_linters = {'go': ['govet', 'golint']}
-let g:ale_set_loclist = 0
+" let g:ale_set_loclist = 0
 " let g:ale_set_quickfix = 0
-let g:ale_open_list = 0
+" let g:ale_open_list = 0
 " Set this if you want to.
 " This can be useful if you are combining ALE with
 " some other plugin which sets quickfix errors, etc.
-let g:ale_keep_list_window_open = 0
+" let g:ale_keep_list_window_open = 0
 " Enable integration with airline.
 " let g:airline#extensions#ale#enabled = 1
 
@@ -294,7 +316,7 @@ let g:go_test_timeout = '300s'
 " let g:neosnippet#snippets_directory = ''
 
 let g:python_host_prog = '/usr/local/bin/python2.7'
-let g:python3_host_prog = '/usr/local/opt/python/libexec/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
 
 "To create a new tab
 nnoremap <C-a> :tabnew<CR>
@@ -414,6 +436,8 @@ syntax on
 " map <Leader>h <Plug>(easymotion-linebackward)
 " nmap s <Plug>(easymotion-overwin-f2)
 nmap s <Plug>(easymotion-overwin-f)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+nmap <Leader>l <Plug>(easymotion-sl)
 let g:EasyMotion_startofline = 0
 
 " Move to line
@@ -449,6 +473,8 @@ autocmd FileType go nmap <leader>t  <Plug>(go-test-func)
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'vsplit')
 " set completeopt-=preview
 
+" set completeopt=menu,menuone,noselect
+
 highlight GitGutterAdd    guifg=#009900 guibg=<X> ctermfg=2
 highlight GitGutterChange guifg=#bbbb00 guibg=<X> ctermfg=3
 highlight GitGutterDelete guifg=#ff2222 guibg=<X> ctermfg=1
@@ -461,7 +487,7 @@ set tags=./.tags,.tags,./tags,tags
 "
 set noshowmode
 
-nnoremap <silent> <space>y  :CocList yank<cr>
+" nnoremap <silent> <space>y  :CocList yank<cr>
 " " Or, you could use neovim's floating text feature.
 " let g:echodoc#enable_at_startup = 1
 " let g:echodoc#type = 'floating'
@@ -498,29 +524,29 @@ set signcolumn=yes
 " endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use `[c` and `]c` to navigate diagnostics
 " nmap <silent> [n <Plug>(coc-diagnostic-prev)
 " nmap <silent> ]n <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
-nmap <silent> gd :call CocAction('jumpDefinition')<CR>
-"<Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+"nmap <silent> gd :call CocAction('jumpDefinition')<CR>
+""<Plug>(coc-definition)
+"nmap <silent> gy <Plug>(coc-type-definition)
+"nmap <silent> gi <Plug>(coc-implementation)
+"nmap <silent> gr <Plug>(coc-references)
 
 " Use U to show documentation in preview window
-nnoremap <silent> U :call <SID>show_documentation()<CR>
+" nnoremap <silent> U :call <SID>show_documentation()<CR>
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+" function! s:show_documentation()
+"   if (index(['vim','help'], &filetype) >= 0)
+"     execute 'h '.expand('<cword>')
+"   else
+"     call CocAction('doHover')
+"   endif
+" endfunction
 
 " use <tab> for trigger completion and navigate to the next complete item
 let g:UltiSnipsExpandTrigger = '<C-y>'
@@ -542,24 +568,24 @@ let g:UltiSnipsRemoveSelectModeMappings = 0
 
 " let g:coc_snippet_next = '<tab>'
 
-inoremap <silent><expr> <cr>
-        \ pumvisible() ? coc#_select_confirm() :
-        \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" inoremap <silent><expr> <cr>
+"         \ pumvisible() ? coc#_select_confirm() :
+"         \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
+" inoremap <silent><expr> <Tab>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<Tab>" :
+"       \ coc#refresh()
 
-inoremap <silent><expr> <S-Tab>
-      \ pumvisible() ? "\<C-p>" :
-      \ <SID>check_back_space() ? "\<S-Tab>" :
-      \ coc#refresh()
+" inoremap <silent><expr> <S-Tab>
+"       \ pumvisible() ? "\<C-p>" :
+"       \ <SID>check_back_space() ? "\<S-Tab>" :
+"       \ coc#refresh()
 
 " inoremap <silent><expr> <TAB>
 "       \ pumvisible() ? coc#_select_confirm() :
@@ -578,30 +604,30 @@ inoremap <silent><expr> <S-Tab>
 " autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
+" nmap <leader>rn <Plug>(coc-rename)
 
-" Remap for format selected region
-vmap <leader>fs  <Plug>(coc-format-selected)
-nmap <leader>fs  <Plug>(coc-format-selected)
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" " Remap for format selected region
+" vmap <leader>fs  <Plug>(coc-format-selected)
+" nmap <leader>fs  <Plug>(coc-format-selected)
+" " Show all diagnostics
+" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" " Manage extensions
+" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" " Show commands
+" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" " Find symbol of current document
+" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" " Search workspace symbols
+" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" " Do default action for next item.
+" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" " Do default action for previous item.
+" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" " Resume latest coc list
+" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-nnoremap <silent> <space>i :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
-let g:coc_enable_locationlist = 1
+" nnoremap <silent> <space>i :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
+" let g:coc_enable_locationlist = 1
 
 " au BufRead,BufNewFile *.sbt set filetype=scala
 
@@ -664,3 +690,11 @@ inoremap <C-e> <Esc>A
 " vnoremap $$ <esc>`>a"<esc>`<i"<esc>
 " vnoremap $q <esc>`>a'<esc>`<i'<esc>
 " vnoremap $e <esc>`>a`<esc>`<i`<esc>
+
+let g:PaperColor_Theme_Options = {
+  \   'theme': {
+  \     'default': {
+  \       'transparent_background': 1
+  \     }
+  \   }
+  \ }

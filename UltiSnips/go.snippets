@@ -1,0 +1,11 @@
+
+snippet tne "require.NoError(t, err)"
+require.NoError(t, err)
+endsnippet
+
+snippet tr "t.Run('test-description', func(t *testing.T){})"
+t.Run("${1}", func(t *testing.T) {
+	${2}
+})
+endsnippet
+

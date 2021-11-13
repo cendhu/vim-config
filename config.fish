@@ -8,15 +8,16 @@ set -gx PATH $PATH $GOPATH/bin
 set -gx PATH $PATH $GOROOT/bin
 set -gx PATH $PATH /Users/senthil/go/src/github.com/hyperledger/fabric/build/bin
 set -gx PATH $PATH /Library/TeX/texbin
+set -gx PATH /usr/local/java11/bin $PATH
 set -gx FABRIC_CFG_PATH /Users/senthil/go/src/github.com/hyperledger/fabric/sampleconfig
 set -gx CSCOPE_DB /Users/senthil/go/src/github.com/hyperledger/fabric/cscope.out
 set -gx PATH $PATH /usr/local/opt/gnu-tar/libexec/gnubin
 set -gx PATH $PATH /usr/local/pgsql/bin/
-set -gx JAVA_HOME /Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home
+# set -gx JAVA_HOME /Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home
 set -gx EDITOR "nvim"
 set -gx FABRIC /Users/senthil/go/src/github.com/hyperledger/fabric
 set -gx LOADGEN /Users/senthil/projects/sparse-peer-support
-set -gx BDB /Users/senthil/projects/github.ibm.com/blockchaindb/server
+set -gx ORION /Users/senthil/projects/github.com/hyperledger-labs/orion-server
 #set -x FABRIC_CFG_PATH /Users/senthil/git/src/github.com/hyperledger/fabric/sampleconfig/
 
 set -g fish_user_paths "/usr/local/opt/qt/bin" $fish_user_paths
@@ -26,7 +27,8 @@ set -gx PKG_CONFIG_PATH "/usr/local/opt/qt/lib/pkgconfig"
 set -gx PATH /Users/senthil/go/src/github.com/hyperledger/fabric/build/bin $PATH
 
 alias fabric='cd /Users/senthil/go/src/github.com/hyperledger/fabric'
-alias bdb='cd /Users/senthil/projects/github.ibm.com/blockchaindb/server'
+alias orion='cd /Users/senthil/projects/github.com/hyperledger-labs/orion-server'
+alias orionc='cd /Users/senthil/projects/github.com/hyperledger-labs/orion-sdk-go'
 alias gm='git checkout master'
 alias pgchain='cd /Users/senthil/IBM-Research/postgresChain'
 alias git-root='cd (git rev-parse --show-cdup)'
